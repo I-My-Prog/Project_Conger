@@ -4,6 +4,7 @@ import lxml.html
 import datetime
 import time
 import Alchemy
+import Msgbox
 from bs4 import BeautifulSoup
 global l
 l=[]
@@ -17,6 +18,7 @@ def check(entry):
 
 def add(entry):
     if check(entry) == False : 
+        Msgbox.msgbox(201,int(entry))
         return
     brand_number=int(entry)
     url='https://kabutan.jp/stock/?code='+entry
@@ -47,7 +49,8 @@ def add(entry):
     return
 
 def remove(entry):
-    if check(entry) == False : 
+    if check(entry) == False :
+        Msgbox.msgbox(201,int(entry)) 
         return
     brand_number=int(entry)
     Alchemy.BL_rem(brand_number)

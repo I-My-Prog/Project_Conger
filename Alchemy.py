@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import sys
+import Msgbox
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.orm import sessionmaker
@@ -94,6 +95,7 @@ def BL_ins(_number,_name,_date,_url):
     finally:
         session.close()   
     print("commit complete")
+    Msgbox.msgbox(0,0)
 
 def BL_rem(_number):
     #Brand_Listのアイテムを削除する
@@ -109,6 +111,6 @@ def BL_rem(_number):
     finally:
         session.close()   
     print("commit complete")
-
+    
 if __name__ == "__main__":
     main(sys.argv)
