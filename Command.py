@@ -6,8 +6,6 @@ import time
 import Alchemy
 import Msgbox
 from bs4 import BeautifulSoup
-global l
-l=[]
 
 def check(entry):
     if re.match('^[0-9]{4}$',entry) is None:

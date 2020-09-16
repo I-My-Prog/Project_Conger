@@ -111,6 +111,20 @@ def BL_rem(_number):
     finally:
         session.close()   
     print("commit complete")
-    
+
+def BL_sel(_number):
+    #指定されたnumberのデータを読みだす
+    pass
+    return
+
+def AD_ins(adlist):
+    #List型を展開してAcquired_Dataに追加する。
+    #[number,name,date,price,bol,PER,PBR,yield,cd_ratio,D5_Dir,D5_Dev,D25_Dir,D25_Dev,D75_Dir,D75_Dev,D200_Dir,D200_Dev]
+    pass
+    return
+
+def Export_CSV():
+    pass
+    return
 if __name__ == "__main__":
     main(sys.argv)
