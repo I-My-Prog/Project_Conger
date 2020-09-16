@@ -76,6 +76,7 @@ def main(args):
     Base.metadata.create_all(bind=ENGINE)
 
 def BL_ins(_number,_name,_date,_url):
+    #Brand_Listにアイテムを追加する
     print(_number)
     print(_name)
     print(_url)
@@ -94,6 +95,20 @@ def BL_ins(_number,_name,_date,_url):
         session.close()   
     print("commit complete")
 
+def BL_rem(_number):
+    #Brand_Listのアイテムを削除する
+    try:
+        SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
+        session=SessionClass()
+        session.query(Brand).filter(Brand.number==_number).delete()
+        session.commit() #()をつけた時の挙動調査
+        print("t")
+    except SQLAlchemyError:
+        print("e")
+        session.rollback()
+    finally:
+        session.close()   
+    print("commit complete")
 
 if __name__ == "__main__":
     main(sys.argv)

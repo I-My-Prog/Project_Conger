@@ -17,7 +17,6 @@ def check(entry):
 
 def add(entry):
     if check(entry) == False : 
-        print 
         return
     brand_number=int(entry)
     url='https://kabutan.jp/stock/?code='+entry
@@ -48,7 +47,10 @@ def add(entry):
     return
 
 def remove(entry):
-    pass
+    if check(entry) == False : 
+        return
+    brand_number=int(entry)
+    Alchemy.BL_rem(brand_number)
     return
 
 def run(entry):
