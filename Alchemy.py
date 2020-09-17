@@ -49,25 +49,25 @@ class Acquired_Data(Base):
     Day200_Direct = Column('Day200_Direct', Float)      #200日向き
     Day200_Devi = Column('Day200_Devi', Float)          #200日乖離
 
-    def __init__(self,number,name,url):
-        self.number = number
-        self.name = name
+    def __init__(self,adlist):
+        self.number = adlist[0]
+        self.name = adlist[1]
         now = datetime.now()
         self.date = now
-        self.price = price
-        self.bollinger = bollinger
-        self.PER = PER
-        self.PBR = PBR
-        self.yield_score =yield_score
-        self.credit_ratio = credit_ratio
-        self.Day5_Direct = Day5_Direct
-        self.Day5_Devi = Day5_Devi
-        self.Day25_Direct = Day25_Direct
-        self.Day25_Devi = Day25_Devi
-        self.Day75_Direct = Day75_Direct 
-        self.Day75_Devi = Day75_Devi
-        self.Day200_Direct = Day200_Direct
-        self.Day200_Devi = Day200_Devi
+        self.price = adlist[3]
+        self.bollinger = adlist[4]
+        self.PER = adlist[5]
+        self.PBR = adlist[6]
+        self.yield_score =adlist[7]
+        self.credit_ratio = adlist[8]
+        self.Day5_Direct = adlist[9]
+        self.Day5_Devi = adlist[10]
+        self.Day25_Direct = adlist[11]
+        self.Day25_Devi = adlist[12]
+        self.Day75_Direct = adlist[13]
+        self.Day75_Devi = adlist[14]
+        self.Day200_Direct = adlist[15]
+        self.Day200_Devi = adlist[16]
 
 
 def main(args):
@@ -94,8 +94,6 @@ def BL_ins(_number,_name,_date,_url):
         session.rollback()
     finally:
         session.close()   
-    print("commit complete")
-    Msgbox.msgbox(0,0)
 
 def BL_rem(_number):
     '''
@@ -110,7 +108,6 @@ def BL_rem(_number):
         session.rollback()
     finally:
         session.close()   
-    print("commit complete")
 
 def BL_sel():
     #指定されたnumberのデータを読みだす
@@ -157,9 +154,34 @@ def AD_cls():
 
 def AD_ins(adlist):
     #List型を展開してAcquired_Dataに追加する。
-    #[number,name,date,price,bol,PER,PBR,yield,cd_ratio,D5_Dir,D5_Dev,D25_Dir,D25_Dev,D75_Dir,D75_Dev,D200_Dir,D200_Dev]
-    pass
-    return
+    #number,name,date,price,bollinger,PER,PBR,yield_score,credit_ratio,Day5_Direct,Day5_Devi,Day25_Direct,Day25_Devi,Day75_Direct,Day75_Devi,Day200_Direct,Day200_Devi
+    # 0:number
+    # 1:name
+    # 2:date
+    # 3:price
+    # 4:bollinger
+    # 5:PER
+    # 6:PBR
+    # 7:yield_score
+    # 8:credit_ratio
+    # 9:Day5_Direct
+    # 10:Day5_Devi
+    # 11:Day25_Direct
+    # 12:Day25_Devi
+    # 13:Day75_Direct
+    # 14:Day75_Devi
+    # 15:Day200_Direct
+    # 16:Day200_Devi
+    try:
+        SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
+        session=SessionClass()
+        data=Acquired_Data(adlist)
+        session.add(data)
+        session.commit() #()をつけた時の挙動調査
+    
+    finally:
+        session.close()   
+    print("commit complete")
 
 def Export_CSV():
     pass

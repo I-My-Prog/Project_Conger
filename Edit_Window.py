@@ -3,11 +3,26 @@ from tkinter import ttk
 import tkinter.font as tkFont
 import Command
 import Alchemy    #for Debug
+from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from Alchemy_Setting import Base,ENGINE,Session
 def show_selection():
    for i in lb.curselection():
       print(lb.get(i))
 
 # fontStyle_H1 = tkFont.Font("System",20)
+def LB():   # Listbox
+   v1 = StringVar()
+   lb = Listbox(frame, listvariable=v1, height=10)
+   i = 0
+   for data in Alchemy.BL_sel():
+      BD_zero = str(data.number).zfill(4)
+      brand_data = BD_zero +" | "+ data.name
+      lb.insert(i,brand_data)
+      i+=0
+   lb.grid(row=1, column=3,rowspan=10)
+   lb.after(1000,LB)
 
 if __name__ == '__main__':
    root = Tk()
@@ -62,11 +77,8 @@ if __name__ == '__main__':
    # CntBL_Button(Debug)
    cntbl_button = ttk.Button(frame,text="BLカウント(DB)",command=lambda: Alchemy.BL_cnt())
    cntbl_button.grid(pady=0,row=6, column=1, columnspan=1,sticky="nsew")
-
-   # Listbox
-   currencies = ('ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR','STU','WXY','ZXX','zxx','ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR','STU','WXY','ZXX','zxx')
-   v1 = StringVar(value=currencies)
-   lb = Listbox(frame, listvariable=v1, height=10)
-   lb.grid(row=1, column=3,rowspan=10)
-
+   LB()
    root.mainloop()
+   
+
+   

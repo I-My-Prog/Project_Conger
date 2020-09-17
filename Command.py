@@ -15,7 +15,7 @@ def check(entry):
         return False
     return True
 
-def add(entry):
+def add(entry):     #人力入力なのでレイテンシなし
     if check(entry) == False : 
         Msgbox.msgbox(201,int(entry))
         return
@@ -58,7 +58,8 @@ def remove(entry):
 def run(entry):
     Alchemy.AD_cls()
     brands=Alchemy.BL_sel()
-    Scrape.main(brands)
+    ad_data = Scrape.main(brands)
+    #Alchemy.AD_ins(ad_data)
     return
 
 def ext(entry):
