@@ -1,77 +1,185 @@
 from bs4 import BeautifulSoup
 import sys
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Float, DateTime
-from Alchemy_Setting import Base
-from Alchemy_Setting import ENGINE
-from datetime import datetime
+import Alchemy
+import datetime
+import time
+import urllib.request
+import lxml.html
+import re
 
-class Bland(Base):
-    """
-    銘柄モデル
-    """
-    __tablename__ = 'Brand_List'
-    number = Column('number', Integer, primary_key = True)
-    name = Column('name', String(50))
-    date = Column('date', DateTime)
-    url = Column('url', String(200))
+def main(brands):
+    #スクレイプ実行モジュール
+    # 0:number
+    # 1:name
+    # 2:date
+    # 3:price
+    # 4:bollinger
+    # 5:PER
+    # 6:PBR
+    # 7:yield_score
+    # 8:credit_ratio
+    # 9:Day5_Direct
+    # 10:Day5_Devi
+    # 11:Day25_Direct
+    # 12:Day25_Devi
+    # 13:Day75_Direct
+    # 14:Day75_Devi
+    # 15:Day200_Direct
+    # 16:Day200_Devi
+    print(brands)
+    for brand in brands:
+        time.sleep(0.5)
 
-    def __init__(self,number,name,url):
-        self.number = number
-        self.name = name
-        now = datetime.now()
-        self.date = now
-        self.url = url
+        ad = [0]*17
+        ad[0] = brand.number
+        ad[1] = brand.name
+        url = brand.url
+        url_C = 'https://kabutan.jp/stock/chart?code='+str(ad[0])
+        ad[2] = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
 
-class Acquired_Data(Base):
-    """
-    取得データモデル
-    """
-    __tablename__ = 'Acquired_Data'
-    number = Column('number', Integer, primary_key = True)
-    name = Column('name', String(50))
-    date = Column('date', DateTime)
+        ua ='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) '\
+        'AppleWebKit/537.36 (KHTML, like Gecko) '\
+        'Chrome/55.0.2883.95 Safari/537.36 '
+        req = urllib.request.Request(url, headers={'User-Agent': ua})
+        html = urllib.request.urlopen(req)
+        soup = BeautifulSoup(html, "html.parser")
 
-    price = Column('price', Float)
-    bollinger = Column('bollinger', Float)
-    PER = Column('PER', Float)
-    PBR = Column('PBR', Float)
-    yield_score = Column('yield_score', Float)      #利回り
-    credit_ratio = Column('credit_ratio', Float)   #信用倍率
-    Day5_Direct = Column('Day5_Direct', Float)      #5日向き
-    Day5_Devi = Column('Day5_Devi', Float)          #5日乖離
-    Day25_Direct = Column('Day25_Direct', Float)      #25日向き
-    Day25_Devi = Column('Day25_Devi', Float)          #25日乖離
-    Day75_Direct = Column('Day75_Direct', Float)      #75日向き
-    Day75_Devi = Column('Day75_Devi', Float)          #75日乖離
-    Day200_Direct = Column('Day200_Direct', Float)      #200日向き
-    Day200_Devi = Column('Day200_Devi', Float)          #200日乖離
+        if soup is None:
+            print("error: pages-not-found")
+            return
+        lxml_soup = lxml.html.fromstring(str(soup))
+        error_message = lxml_soup.xpath('//*[@id="main"]/p')
+        if len(error_message)>0:
+            print("error: pages-not-found")
+            return
+        else:
+            try:
+                ad[3] = price(lxml_soup)
+            except:
+                ad[1] = ad[1]+"-Error-"
+            #ad[4] = bollinger(url_C,ad[3])
+            ad[5] = PER(lxml_soup,0)
+            ad[6] = PER(lxml_soup,1)
+            ad[7] = PER(lxml_soup,2)
+            ad[8] = PER(lxml_soup,3)
+            ad[9] = dd_devi(lxml_soup,5)
+            ad[10] = dd_dir(lxml_soup,5)
+            ad[11] = dd_devi(lxml_soup,25)
+            ad[12] = dd_dir(lxml_soup,25)
+            ad[13] = dd_devi(lxml_soup,75)
+            ad[14] = dd_dir(lxml_soup,75)
+            ad[15] = dd_devi(lxml_soup,200)
+            ad[16] = dd_dir(lxml_soup,200)
+            print(ad)
+            Alchemy.AD_ins(ad)
+    return ad
 
-    def __init__(self,number,name,url):
-        self.number = number
-        self.name = name
-        now = datetime.now()
-        self.date = now
-        self.price = price
-        self.bollinger = bollinger
-        self.PER = PER
-        self.PBR = PBR
-        self.yield_score =yield_score
-        self.credit_ratio = credit_ratio
-        self.Day5_Direct = Day5_Direct
-        self.Day5_Devi = Day5_Devi
-        self.Day25_Direct = Day25_Direct
-        self.Day25_Devi = Day25_Devi
-        self.Day75_Direct = Day75_Direct 
-        self.Day75_Devi = Day75_Devi
-        self.Day200_Direct = Day200_Direct
-        self.Day200_Devi = Day200_Devi
+def price(lxml_soup):
+    price = re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/section/div[1]/div[2]/div[1]/div[2]/span[2]/text()')[0])
+    x=''
+    for i in price:
+        x+=i
+    return float(x)
 
-def command():
+def bollinger(url_C,price):
+    url = url_C
+    response = urllib.request.urlopen(url)
+    content = response.read()
+    response.close()
 
-def main(args):
+    charset = response.headers.get_content_charset()
+    html = content.decode(charset, 'ignore')
+    soup = BeautifulSoup(html)
 
-    Base.metadata.create_all(bind=ENGINE)
+    print("__BOLLINGER__")
+    print(soup.select('#stockinfo_i1 > div.si_i1_2 > span.kabuka'))
+    print(soup.select('#kc_techTable1 > tbody > tr:nth-child(1) > td.kc_techTable_td2'))
+    print('bol_DB3_sign '+ str(lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[1]/td[1]')))
+    p3= re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[1]/td[2]/text()')[0])
+    p2= re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[2]/td[2]/text()')[0])
+    p0= re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[4]/td[2]/text()')[0])
+    p3_chr=''
+    p2_chr=''
+    p0_chr=''
+    for i in p3:
+        p3_chr+=i
+    for i in p2:
+        p2_chr+=i
+    for i in p0:
+        p0_chr+=i
+    p3_flt = float(p3_chr)
+    p2_flt = float(p2_chr)
+    p0_flt = float(p0_chr)
+    bol_dist = p3_flt - p2_flt  #ボリンジャー１の差
+    bolscore = (price-p0_flt)/bol_dist
+    print(bolscore)
+    return bolscore
+
+def PER(soup,mode):
+    if mode == 0:
+        try:
+            per = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/section/div[1]/div[2]/div[3]/table/tbody/tr[1]/td[1]/text()')[0])
+        except:
+            per = None
+        return per
+    elif mode == 1:
+        try:
+            pbr = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/section/div[1]/div[2]/div[3]/table/tbody/tr[1]/td[2]/text()')[0])
+        except:
+            pbr = None
+        return pbr
+    elif mode == 2:
+        try:
+            yield_score = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/section/div[1]/div[2]/div[3]/table/tbody/tr[1]/td[3]/text()')[0])
+        except:
+            yield_score = None
+        return yield_score
+    else:
+        try:
+            credit = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/section/div[1]/div[2]/div[3]/table/tbody/tr[1]/td[2]/text()')[0])
+        except:
+            credit = None
+        return credit
+
+def dd_devi(soup,days):
+    if days == 5:
+        try:
+            score = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[3]/td[1]/span/text()')[0])
+        except:
+            score = None
+        return score
+    elif days == 25:
+        try:
+            score = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[3]/td[2]/span/text()')[0])
+        except:
+            score = None
+        return score
+    elif days == 75:
+        try:
+            score = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[3]/td[3]/span/text()')[0])
+        except:
+            score = None
+        return score
+    elif days == 200:
+        try:
+            score = float(soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[3]/td[4]/span/text()')[0])
+        except:
+            score = None
+        return score
+def dd_dir(soup,days):
+    try:
+        string = soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[1]/td[4]/img/@alt')[0]
+        if string == "上昇":  
+            score = 5  
+        elif string == "反発":  #v字回復
+            score = 4
+        elif string == "反落":  
+            score = 2
+        elif string == "下降":
+            score = 1
+    except:
+        score = None
+    return score
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()

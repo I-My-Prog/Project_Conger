@@ -4,9 +4,9 @@ import lxml.html
 import datetime
 import time
 import Alchemy
+import Msgbox
+import Scrape
 from bs4 import BeautifulSoup
-global l
-l=[]
 
 def check(entry):
     if re.match('^[0-9]{4}$',entry) is None:
@@ -15,9 +15,9 @@ def check(entry):
         return False
     return True
 
-def add(entry):
+def add(entry):     #人力入力なのでレイテンシなし
     if check(entry) == False : 
-        print 
+        Msgbox.msgbox(201,int(entry))
         return
     brand_number=int(entry)
     url='https://kabutan.jp/stock/?code='+entry
@@ -48,11 +48,18 @@ def add(entry):
     return
 
 def remove(entry):
-    pass
+    if check(entry) == False :
+        Msgbox.msgbox(201,int(entry)) 
+        return
+    brand_number=int(entry)
+    Alchemy.BL_rem(brand_number)
     return
 
 def run(entry):
-    pass
+    Alchemy.AD_cls()
+    brands=Alchemy.BL_sel()
+    ad_data = Scrape.main(brands)
+    #Alchemy.AD_ins(ad_data)
     return
 
 def ext(entry):
