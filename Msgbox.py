@@ -13,6 +13,8 @@ def msgbox(code=200,option=0):
         messagebox.showerror('エラー', 'エラーが発生しました')
     elif code == 2:
         messagebox.showinfo('情報 code:'+str(code),'出力：'+str(option))
+    elif code == 5:
+        messagebox.showinfo('情報 code:'+str(code),'スクレイピングの実行が完了しました')
     elif code == 200:
         messagebox.showerror('エラー code:'+str(code),'Unknown')
     elif code == 201:

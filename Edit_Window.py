@@ -7,27 +7,30 @@ from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from Alchemy_Setting import Base,ENGINE,Session
+import time
 def show_selection():
    for i in lb.curselection():
       print(lb.get(i))
 
 # fontStyle_H1 = tkFont.Font("System",20)
 def LB():   # Listbox
+   time.sleep(0.1)
    v1 = StringVar()
-   lb = Listbox(frame, listvariable=v1, height=10)
+   lb = Listbox(frame, listvariable=v1, height=30)
    i = 0
    for data in Alchemy.BL_sel():
       BD_zero = str(data.number).zfill(4)
       brand_data = BD_zero +" | "+ data.name
       lb.insert(i,brand_data)
       i+=0
-   lb.grid(row=1, column=3,rowspan=10)
+   lb.grid(row=1, column=3,rowspan=40)
    lb.after(1000,LB)
+
 
 if __name__ == '__main__':
    root = Tk()
    root.title('銘柄登録ウィンドウ')
-   root.resizable(False, False)
+   root.resizable(False, True)
    root.columnconfigure(0, weight=1)
    root.rowconfigure(0, weight=1)
 

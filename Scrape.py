@@ -28,9 +28,9 @@ def main(brands):
     # 16:Day200_Devi
     print(brands)
     for brand in brands:
-        time.sleep(0.5)
+        time.sleep(1)
 
-        ad = [0]*17
+        ad = [0]*17 
         ad[0] = brand.number
         ad[1] = brand.name
         url = brand.url

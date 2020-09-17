@@ -59,6 +59,7 @@ def run(entry):
     Alchemy.AD_cls()
     brands=Alchemy.BL_sel()
     ad_data = Scrape.main(brands)
+    Msgbox.msgbox(5,0)
     #Alchemy.AD_ins(ad_data)
     return
 
