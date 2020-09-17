@@ -55,7 +55,7 @@ def remove(entry):
     return
 
 def run(entry):
-    pass
+    Alchemy.BL_sel()
     return
 
 def ext(entry):

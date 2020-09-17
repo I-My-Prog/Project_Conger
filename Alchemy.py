@@ -98,24 +98,40 @@ def BL_ins(_number,_name,_date,_url):
     Msgbox.msgbox(0,0)
 
 def BL_rem(_number):
-    #Brand_Listのアイテムを削除する
+    '''
+    Brand_Listのアイテムを削除する
+    '''
     try:
         SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
         session=SessionClass()
         session.query(Brand).filter(Brand.number==_number).delete()
-        session.commit() #()をつけた時の挙動調査
-        print("t")
+        session.commit() 
     except SQLAlchemyError:
-        print("e")
         session.rollback()
     finally:
         session.close()   
     print("commit complete")
 
-def BL_sel(_number):
+def BL_sel():
     #指定されたnumberのデータを読みだす
+    try:
+        SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
+        session=SessionClass()
+        brands =session.query(Brand.number,Brand.name,Brand.url).all()
+    except SQLAlchemyError:
+        print("e")
+        session.rollback()
+    finally:
+        session.close()
+    for brand in brands:
+        print(str(brand.number)+" "+brand.name+" "+brand.url)
+
+
+def AD_cls():
+    '''
+    ADを初期化する(混合回避のため)
+    '''
     pass
-    return
 
 def AD_ins(adlist):
     #List型を展開してAcquired_Dataに追加する。
