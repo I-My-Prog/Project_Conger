@@ -3,9 +3,11 @@ import sys
 from Alchemy import *
 from datetime import datetime
 
-def main():
+def main(brands):
     #スクレイプ実行モジュール
-    pass
+    print(brands)
+    for brand in brands:
+        pass
     return
 
 if __name__ == "__main__":

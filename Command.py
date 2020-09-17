@@ -5,6 +5,7 @@ import datetime
 import time
 import Alchemy
 import Msgbox
+import Scrape
 from bs4 import BeautifulSoup
 
 def check(entry):
@@ -55,7 +56,9 @@ def remove(entry):
     return
 
 def run(entry):
-    Alchemy.BL_sel()
+    Alchemy.AD_cls()
+    brands=Alchemy.BL_sel()
+    Scrape.main(brands)
     return
 
 def ext(entry):

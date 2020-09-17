@@ -123,15 +123,37 @@ def BL_sel():
         session.rollback()
     finally:
         session.close()
-    for brand in brands:
-        print(str(brand.number)+" "+brand.name+" "+brand.url)
+    return brands
 
+def BL_cnt():
+    '''
+    BLの件数を取得する
+    '''
+    try:
+        SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
+        session=SessionClass()
+        count =session.query(Brand).count()
+    except SQLAlchemyError:
+        session.rollback()
+    finally:
+        session.close() 
+    Msgbox.msgbox(2,count)
+    return count
 
+    
 def AD_cls():
     '''
     ADを初期化する(混合回避のため)
     '''
-    pass
+    try:
+        SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
+        session=SessionClass()
+        session.query(Acquired_Data).delete()
+        session.commit() 
+    except SQLAlchemyError:
+        session.rollback()
+    finally:
+        session.close()
 
 def AD_ins(adlist):
     #List型を展開してAcquired_Dataに追加する。

@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import tkinter.font as tkFont
 import Command
+import Alchemy    #for Debug
 def show_selection():
    for i in lb.curselection():
       print(lb.get(i))
@@ -53,6 +54,14 @@ if __name__ == '__main__':
    # Exit_Button
    exit_button = ttk.Button(frame,text="プログラムを終了",command=lambda: Command.ext(entry.get()))  #extはわざと。exitは予約語のため。
    exit_button.grid(pady=0,row=5, column=0, columnspan=3,sticky="nsew")
+
+   # ClsAD_Button(Debug)
+   clsad_button = ttk.Button(frame,text="ADクリア(DB)",command=lambda: Alchemy.AD_cls())
+   clsad_button.grid(pady=0,row=6, column=0, columnspan=1,sticky="nsew")
+
+   # CntBL_Button(Debug)
+   cntbl_button = ttk.Button(frame,text="BLカウント(DB)",command=lambda: Alchemy.BL_cnt())
+   cntbl_button.grid(pady=0,row=6, column=1, columnspan=1,sticky="nsew")
 
    # Listbox
    currencies = ('ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR','STU','WXY','ZXX','zxx','ABC', 'DEF', 'GHI', 'JKL', 'MNO', 'PQR','STU','WXY','ZXX','zxx')
