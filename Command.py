@@ -1,12 +1,14 @@
-import re
-import urllib.request
-import lxml.html
-import datetime
-import time
-import Alchemy
-import Msgbox
-import Scrape
 from bs4 import BeautifulSoup
+import Alchemy_Setting
+import Alchemy
+import datetime
+import lxml.html
+import Msgbox
+import pandas as pd
+import re
+import Scrape
+import time
+import urllib.request
 
 def check(entry):
     if re.match('^[0-9]{4}$',entry) is None:
@@ -62,6 +64,26 @@ def run(entry):
     Msgbox.msgbox(5,0)
     #Alchemy.AD_ins(ad_data)
     return
+
+def convert():
+    dt = datetime.datetime.today().strftime("%Y-%m-%d-%H%M%S")
+    path_w = 'output/data'+dt+'.csv'
+    column = "number,name,date,price,bollinger,PER,PBR,yield_score,credit_ratio,Day5_Direct,Day5_Devi,Day25_Direct,Day25_Devi,Day75_Direct,Day75_Devi,Day200_Direct,Day200_Devi\n"
+    with open(path_w, mode='w') as f:
+        f.write(column)
+    for data in Alchemy.AD_sel():
+        output = str(data.number)+","+data.name+","+str(data.date)+","+str(data.price)+","+str(data.bollinger)+","+str(data.PER)+","+str(data.PBR)+","+str(data.yield_score)+","+str(data.credit_ratio)+","+str(data.Day5_Direct)+","+str(data.Day5_Devi)+","+str(data.Day25_Direct)+","+str(data.Day25_Devi)+","+str(data.Day75_Direct)+","+str(data.Day75_Devi)+","+str(data.Day200_Direct)+","+str(data.Day200_Devi)+"\n"
+        with open(path_w, mode='a') as f:
+            f.write(output)
+
+'''
+    rb = Alchemy_Setting.ENGINE.execute()
+    td = Alchemy.AD_sel
+    df = pd.DataFrame(td)
+    df.head()
+    #df.rename = (columns={0:'number',1:'name',2:'date',3:'price',4:'bollinger',5:'PER',6:'PBR',7:'yield_score',8:'credit_ratio',9:'Day5_Direct',10:'Day5_Devi',11:'Day25_Direct',12:'Day25_Devi',13:'Day75_Direct',14:'Day75_Devi',15:'Day200_Direct',16:'Day200_Devi'},inplace=True)
+    dt = datetime.datetime.today().strftime("%Y-%m-%d-%H%M%S")
+    df.to_csv('db'+dt+'.csv')'''
 
 def ext(entry):
     exit()

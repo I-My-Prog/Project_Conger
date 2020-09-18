@@ -22,7 +22,7 @@ def LB():   # Listbox
       BD_zero = str(data.number).zfill(4)
       brand_data = BD_zero +" | "+ data.name
       lb.insert(i,brand_data)
-      i+=0
+      i+=1
    lb.grid(row=1, column=3,rowspan=40)
    lb.after(1000,LB)
 
@@ -81,7 +81,9 @@ if __name__ == '__main__':
    cntbl_button = ttk.Button(frame,text="BLカウント(DB)",command=lambda: Alchemy.BL_cnt())
    cntbl_button.grid(pady=0,row=6, column=1, columnspan=1,sticky="nsew")
    LB()
+   
+   #Export CSV
+   csv_button = ttk.Button(frame,text="CSV出力(DB)",command=lambda: Command.convert())
+   csv_button.grid(pady=0,row=6, column=2, columnspan=1,sticky="nsew")
+   
    root.mainloop()
-   
-
-   

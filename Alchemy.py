@@ -110,7 +110,7 @@ def BL_rem(_number):
         session.close()   
 
 def BL_sel():
-    #指定されたnumberのデータを読みだす
+    
     try:
         SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
         session=SessionClass()
@@ -151,6 +151,21 @@ def AD_cls():
         session.rollback()
     finally:
         session.close()
+
+def AD_sel():
+    global adsel_data
+    try:
+        SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
+        session=SessionClass()
+        
+        adsel_data =session.query(Acquired_Data).all()
+    except SQLAlchemyError:
+        print("e")
+        session.rollback()
+        return
+    finally:
+        session.close()
+    return adsel_data
 
 def AD_ins(adlist):
     #List型を展開してAcquired_Dataに追加する。
