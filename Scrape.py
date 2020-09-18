@@ -6,7 +6,7 @@ import time
 import urllib.request
 import lxml.html
 import re
-
+from Msgbox import msgbox
 def main(brands):
     #スクレイプ実行モジュール
     # 0:number
@@ -26,7 +26,7 @@ def main(brands):
     # 14:Day75_Devi
     # 15:Day200_Direct
     # 16:Day200_Devi
-    print(brands)
+    #print(brands)
     for brand in brands:
         time.sleep(1)
 
@@ -45,12 +45,12 @@ def main(brands):
         soup = BeautifulSoup(html, "html.parser")
 
         if soup is None:
-            print("error: pages-not-found")
+            msgbox(206,int(brand.number))
             return
         lxml_soup = lxml.html.fromstring(str(soup))
         error_message = lxml_soup.xpath('//*[@id="main"]/p')
         if len(error_message)>0:
-            print("error: pages-not-found")
+            msgbox(207,int(brand.number))
             return
         else:
             try:
