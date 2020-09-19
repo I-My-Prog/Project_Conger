@@ -46,7 +46,7 @@ def add(entry):     #人力入力なのでレイテンシなし
 
     date=nowtime.strftime('%Y/%m/%d %H:%M:%S')
     #print(str(brand_number)+" | "+brand_name+" | "+url+" | "+date)
-    msgbox(6,brand_number)
+    msgbox(11,brand_number)
     Alchemy.BL_ins(brand_number,brand_name,date,url)
     return
 
@@ -69,7 +69,7 @@ def run(entry):
 def convert():
     dt = datetime.datetime.today().strftime("%Y-%m-%d-%H%M%S")
     path_w = 'output/data'+dt+'.csv'
-    column = "number,name,date,price,bollinger,PER,PBR,yield_score,credit_ratio,Day5_Direct,Day5_Devi,Day25_Direct,Day25_Devi,Day75_Direct,Day75_Devi,Day200_Direct,Day200_Devi\n"
+    column = "No,銘柄名,取得日時,価格,ボリンジャー,PER,PBR,利回り,信用倍率,D5_乖離率,D5_トレンド,D25_乖離率,D25_トレンド,D75_乖離率,D75_トレンド,D200_乖離率,D200_トレンド\n"
     with open(path_w, mode='w') as f:
         f.write(column)
     for data in Alchemy.AD_sel():

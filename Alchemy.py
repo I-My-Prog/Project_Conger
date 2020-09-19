@@ -110,7 +110,7 @@ def BL_rem(_number):
         session.close()   
 
 def BL_sel():
-    
+    brands = None
     try:
         SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
         session=SessionClass()
@@ -157,7 +157,6 @@ def AD_sel():
     try:
         SessionClass=sessionmaker(ENGINE) #セッションを作るクラスを作成
         session=SessionClass()
-        
         adsel_data =session.query(Acquired_Data).all()
     except SQLAlchemyError:
         print("e")
