@@ -7,7 +7,9 @@ from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from Alchemy_Setting import Base,ENGINE,Session
+import multiprocessing as mp
 import time
+
 def show_selection():
    for i in lb.curselection():
       print(lb.get(i))
@@ -28,6 +30,7 @@ def LB():   # Listbox
 
 
 if __name__ == '__main__':
+   mp.freeze_support()
    root = Tk()
    root.title('銘柄登録ウィンドウ')
    root.resizable(False, True)
