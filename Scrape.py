@@ -4,6 +4,7 @@ import Alchemy
 import datetime
 import time
 import urllib.request
+import html5lib
 import lxml.html
 import re
 from Msgbox import msgbox
@@ -42,7 +43,7 @@ def main(brands):
         'Chrome/55.0.2883.95 Safari/537.36 '
         req = urllib.request.Request(url, headers={'User-Agent': ua})
         html = urllib.request.urlopen(req)
-        soup = BeautifulSoup(html, "html.parser")
+        soup = BeautifulSoup(html, "html5lib")
 
         if soup is None:
             msgbox(206,int(brand.number))
@@ -57,7 +58,8 @@ def main(brands):
                 ad[3] = price(lxml_soup)
             except:
                 ad[1] = ad[1]+"-Error-"
-            #ad[4] = bollinger(url_C,ad[3])
+            #ad[4] = bollinger(lxml_soup,ad[3])
+            ad[4] = None
             ad[5] = PER(lxml_soup,0)
             ad[6] = PER(lxml_soup,1)
             ad[7] = PER(lxml_soup,2)
@@ -81,23 +83,16 @@ def price(lxml_soup):
         x+=i
     return float(x)
 
-def bollinger(url_C,price):
-    url = url_C
-    response = urllib.request.urlopen(url)
-    content = response.read()
-    response.close()
-
-    charset = response.headers.get_content_charset()
-    html = content.decode(charset, 'ignore')
-    soup = BeautifulSoup(html)
-
+def bollinger(lxml_soup,price):
     print("__BOLLINGER__")
-    print(soup.select('#stockinfo_i1 > div.si_i1_2 > span.kabuka'))
-    print(soup.select('#kc_techTable1 > tbody > tr:nth-child(1) > td.kc_techTable_td2'))
-    print('bol_DB3_sign '+ str(lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[1]/td[1]')))
-    p3= re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[1]/td[2]/text()')[0])
-    p2= re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[2]/td[2]/text()')[0])
-    p0= re.findall(r'[.]|\d+', lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[4]/td[2]/text()')[0])
+    #print(soup.select('#stockinfo_i1 > div.si_i1_2 > span.kabuka'))
+    #print(soup.select('#kc_techTable1 > tbody > tr:nth-child(1) > td.kc_techTable_td2'))
+    #print('bol_DB3_sign '+ str(lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[1]/td[1]')))
+    p3= lxml_soup.xpath('//*[@id="kc_techTable1"]/tbody/tr[1]/td[2]/text()')
+    p2= lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[2]/td[2]/text()')
+    p0= lxml_soup.xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div[1]/div/div[6]/div[4]/table/tbody/tr[4]/td[2]/text()')
+    print("▼+3")
+    print(p3)
     p3_chr=''
     p2_chr=''
     p0_chr=''
