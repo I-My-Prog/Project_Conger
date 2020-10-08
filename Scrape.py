@@ -161,19 +161,33 @@ def dd_devi(soup,days):
         except:
             score = None
         return score
-def dd_dir(soup,days):
+
+def check_dd_dir(soup,term):
     try:
-        string = soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[1]/td[4]/img/@alt')[0]
-        if string == "上昇":  
-            score = 5  
+        #//*[@id="kobetsu_right"]/div[1]/table/tbody/tr[1]/td[1]/img
+        #//*[@id="kobetsu_right"]/div[1]/table/tbody/tr[1]/td[2]/img
+        string = soup.xpath('/html/body/div[1]/div[3]/div[1]/div[4]/div[1]/table/tbody/tr[1]/td['+str(term)+']/img/@alt')[0]
+        if string == "上昇":
+            score = 5
         elif string == "反発":  #v字回復
             score = 4
-        elif string == "反落":  
+        elif string == "反落":
             score = 2
         elif string == "下降":
             score = 1
     except:
         score = None
+    return score
+
+def dd_dir(soup,days):
+    if days ==5:
+        score = check_dd_dir(soup,1)
+    elif days == 25:
+        score = check_dd_dir(soup,2)
+    elif days == 75:
+        score = check_dd_dir(soup,3)
+    else:
+        score = check_dd_dir(soup,4)
     return score
 
 if __name__ == "__main__":

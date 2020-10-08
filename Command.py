@@ -6,6 +6,7 @@ import lxml.html
 from Msgbox import msgbox
 import pandas as pd
 import re
+import sys
 import Scrape
 import time
 import urllib.request
@@ -88,4 +89,4 @@ def convert():
     df.to_csv('db'+dt+'.csv')'''
 
 def ext(entry):
-    exit()
+    sys.exit()
